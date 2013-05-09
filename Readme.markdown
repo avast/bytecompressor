@@ -1,3 +1,5 @@
+Avast fork of https://github.com/nayuki/Huffman-Coding , it ads bytecompressor layer compatibility.
+
 Huffman Coding
 ==============
 
