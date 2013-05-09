@@ -1,0 +1,5 @@
+#!/bin/bash
+
+echo "cd `pwd`"
+echo "LD_PRELOAD=/usr/lib/libsnappy.so.1 /usr/bin/snzip $@"
+LD_PRELOAD=/usr/lib/libsnappy.so.1 /usr/bin/snzip $@
