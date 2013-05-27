@@ -105,10 +105,11 @@ class ByteBufferBackedOutputStream(val initialBuffCapacity: Int) extends OutputS
   }
 
   def asByteBuffer(): ByteBuffer = {
+    lastBuff.flip()
     if (buffers.isEmpty){
-      lastBuff.flip()
       lastBuff
     }else{
+      // concat all chunks into single ByteBuffer
       var result: ByteBuffer = ByteBuffer.allocate( written )
       buffers += lastBuff
       buffers.foreach(b => {
