@@ -21,16 +21,8 @@ import java.io.{InputStream, OutputStream}
 import scala._
 import scala.collection.mutable.MutableList
 
-/**
- * Created with IntelliJ IDEA.
- * User: karry
- * Date: 6.5.13
- * Time: 21:12
- * To change this template use File | Settings | File Templates.
- */
-abstract class Compressor {
-
-  def pipe(is: InputStream , os: OutputStream ) = {
+object Pipe{
+  def apply(is: InputStream , os: OutputStream) = {
     val buffer = new Array[Byte](65536);
     var r = 0;
     while ( {r = is.read(buffer); r} >= 0  ) {
@@ -38,7 +30,13 @@ abstract class Compressor {
     }
     os.flush();
   }
+}
 
+abstract class Compressor {
+
+  def pipe(is: InputStream , os: OutputStream) = {
+    Pipe(is, os)
+  }
 
   def decompress(compressedIn:ByteBuffer): ByteBuffer
 
