@@ -42,7 +42,7 @@ public class ByteBufferBackedInputStream extends InputStream {
         if (rem == 0)
             return -1;
         int toRead = Math.min(len, rem);
-        buff.get(b, off, len);
+        buff.get(b, off, toRead);
         return toRead;
     }
 }
