@@ -16,6 +16,8 @@
 
 package com.avast;
 
+import com.google.protobuf.ByteString;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
@@ -79,5 +81,9 @@ public class ByteBufferBackedOutputStream extends OutputStream {
             result.flip();
             return result;
         }
+    }
+
+    public ByteString asByteString(){
+        return ByteString.copyFrom(asByteBuffer());
     }
 }
