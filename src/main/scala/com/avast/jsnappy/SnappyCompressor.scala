@@ -43,25 +43,30 @@ object SnappyCompressor extends SnappyCompressor(
  * effect on the next packet processed internally and may so affect
  * data already written to the stream.
  *
- * @param bufferSize buffer size must be a power of 2 between 2**0 and 2**29
+ * Default effort is 1
+ *
+ * @param compressBufferSize buffer size must be a power of 2 between 2**0 and 2**29
  */
-class SnappyCompressor(val effort:Int, val bufferSize:Int) extends Compressor{
+class SnappyCompressor(val effort:Int = 1, val compressBufferSize:Int = 1024) extends Compressor{
 
   def decompress(compressedIn: ByteBuffer): ByteBuffer = {
     val sis: SnzInputStream = new SnzInputStream(new ByteBufferBackedInputStream(compressedIn));
-    val out = new ByteBufferBackedOutputStream(math.max(1024, compressedIn.remaining() * 2))
-    pipe(sis, out);
+    val bufferSize = math.max(1024, compressedIn.remaining() * 2 )
+    val out = new ByteBufferBackedOutputStream(bufferSize)
+    pipe(sis, out, bufferSize);
     sis.close();
 
     out.asByteBuffer()
   }
 
   def compress(rawIn: ByteBuffer): ByteBuffer = {
-    val out = new ByteBufferBackedOutputStream(math.max(1024, rawIn.remaining() * 2))
-    val cos = new SnzOutputStream(out, bufferSize)
+
+    val bufferSize = math.max(1024, rawIn.remaining() * 2 )
+    val out = new ByteBufferBackedOutputStream(bufferSize)
+    val cos = new SnzOutputStream(out, compressBufferSize)
     cos.setCompressionEffort(effort)
     
-    pipe(new ByteBufferBackedInputStream(rawIn), cos);
+    pipe(rawIn, cos);
     cos.close()
 
     out.asByteBuffer()
