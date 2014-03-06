@@ -23,8 +23,15 @@ import java.nio.ByteBuffer;
 
 abstract public class Compressor {
 
+    public void pipe(InputStream is, OutputStream os, int bufferSize) throws IOException {
+        Pipe.apply(is, os, bufferSize);
+    }
+
     public void pipe(InputStream is, OutputStream os) throws IOException {
         Pipe.apply(is, os);
+    }
+    public void pipe(ByteBuffer in, OutputStream os) throws IOException {
+        Pipe.apply(in, os);
     }
 
     public abstract ByteBuffer decompress(ByteBuffer compressedIn);

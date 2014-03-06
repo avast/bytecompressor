@@ -19,15 +19,42 @@ package com.avast;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-
+import java.nio.ByteBuffer;
 
 public class Pipe{
+
     public static void apply(InputStream is, OutputStream os) throws IOException {
-        byte[] buffer = new byte[65536];
+        apply(is,os, 65536);
+    }
+
+    public static void apply(InputStream is, OutputStream os, int bufferSize) throws IOException {
+        if (bufferSize <= 0)
+            throw new IllegalArgumentException("Buffer size can not be less or equal zero.");
+
+        byte[] buffer = new byte[bufferSize];
         int r = 0;
         while ( (r = is.read(buffer)) >= 0  ) {
             os.write(buffer, 0, r);
         }
         os.flush();
     }
+
+    /**
+     * Try to process pipe without source copying.
+     *
+     * @param in
+     * @param os
+     * @throws IOException
+     */
+    public static void apply(ByteBuffer in, OutputStream os) throws IOException {
+        if (in.hasArray()){
+            byte[] inArray = in.array();
+            os.write(inArray, in.position(), in.remaining());
+            os.flush();
+        }else{
+            // fallback with buffer copy
+            apply(new ByteBufferBackedInputStream(in), os, Math.min(65536, Math.max(1, in.remaining())));
+        }
+    }
+
 }
