@@ -50,6 +50,7 @@ public class Pipe{
         if (in.hasArray()){
             byte[] inArray = in.array();
             os.write(inArray, in.position(), in.remaining());
+            in.position(in.limit()); // move to end (limit)
             os.flush();
         }else{
             // fallback with buffer copy
