@@ -48,6 +48,7 @@ public class ByteBufferBackedOutputStream extends OutputStream {
         if (lastBuff.remaining() == 0)
             allocateBuff();
         lastBuff.put((byte)b);
+        written+=1;
     }
 
     @Override
