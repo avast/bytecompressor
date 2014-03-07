@@ -28,7 +28,7 @@ class MapBasedCompressor {
 			l >>= 7;
 		}
 
-		IntListHashMap ilhm = new IntListHashMap(length / 13);
+		IntListHashMap ilhm = new IntListHashMap(Math.max(1, length / 13));
 
 		for(int i = offset; i+4 < length && i < offset+4; i++) {
 			ilhm.put(toInt(in, i), i);

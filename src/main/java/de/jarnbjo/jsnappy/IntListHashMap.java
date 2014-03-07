@@ -24,6 +24,8 @@ class IntListHashMap {
 	private IntIterator iterator = new IntIterator();
 
 	IntListHashMap(int buckets) {
+        if (buckets <= 0)
+            throw new IllegalArgumentException("buckets have to be positive number");
 		this.buckets = buckets;
 		content = new int[buckets][];
 	}
