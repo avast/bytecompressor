@@ -19,6 +19,7 @@ package com.avast.jsnappy
 import com.avast.{ByteBufferBackedOutputStream, ByteBufferBackedInputStream, Compressor}
 import java.nio.ByteBuffer
 import de.jarnbjo.jsnappy._
+import java.io.{InputStream, OutputStream}
 
 /**
  * Created with IntelliJ IDEA.
@@ -49,26 +50,11 @@ object SnappyCompressor extends SnappyCompressor(
  */
 class SnappyCompressor(val effort:Int = 1, val compressBufferSize:Int = 1024) extends Compressor{
 
-  def decompress(compressedIn: ByteBuffer): ByteBuffer = {
-    val sis: SnzInputStream = new SnzInputStream(new ByteBufferBackedInputStream(compressedIn));
-    val bufferSize = math.max(1024, compressedIn.remaining() * 2 )
-    val out = new ByteBufferBackedOutputStream(bufferSize)
-    pipe(sis, out, bufferSize);
-    sis.close();
+  override def decompressionInputStream(delegate: InputStream): InputStream = new SnzInputStream(delegate)
 
-    out.asByteBuffer()
-  }
-
-  def compress(rawIn: ByteBuffer): ByteBuffer = {
-
-    val bufferSize = math.max(1024, rawIn.remaining() * 2 )
-    val out = new ByteBufferBackedOutputStream(bufferSize)
-    val cos = new SnzOutputStream(out, compressBufferSize)
+  override def compressionOutputStream(delegate: OutputStream): OutputStream = {
+    val cos = new SnzOutputStream(delegate, compressBufferSize)
     cos.setCompressionEffort(effort)
-    
-    pipe(rawIn, cos);
-    cos.close()
-
-    out.asByteBuffer()
+    cos
   }
 }
