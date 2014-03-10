@@ -19,14 +19,27 @@ package com.avast.huffman
 import org.scalatest.FlatSpec
 import com.google.protobuf.ByteString
 import java.nio.ByteBuffer
+import com.avast.{Compressor, ByteBufferBackedInputStream, Pipe, ByteBufferBackedOutputStream}
 
-/**
- * Created with IntelliJ IDEA.
- * User: karry
- * Date: 6.5.13
- * Time: 22:40
- */
 class HuffmanCompressorSuite extends FlatSpec{
+
+  def testOutputStream(compressor: Compressor, rawIn: ByteBuffer):ByteBuffer = {
+    val cBuff = new ByteBufferBackedOutputStream(1024)
+    val cos = compressor.compressionOutputStream(cBuff)
+    Pipe.apply(rawIn, cos)
+    cos.close()
+    rawIn.position(0)
+    cBuff.asByteBuffer()
+  }
+
+  def testInputStream(compressor: Compressor, compressed: ByteBuffer):ByteBuffer = {
+    val dis = compressor.decompressionInputStream(new ByteBufferBackedInputStream(compressed))
+    val dBuff = new ByteBufferBackedOutputStream(1024)
+    Pipe.apply(dis, dBuff)
+    dis.close()
+    compressed.position(0)
+    dBuff.asByteBuffer()
+  }
 
   it must "compress and decompress data with adaptive huffman" in {
 
@@ -44,6 +57,13 @@ class HuffmanCompressorSuite extends FlatSpec{
 
     assert(compressed != buff)
     expect(decompressed)(buff)
+
+    // test streams
+    val cBuff = testOutputStream( AdaptiveHuffmanCompressor, buff )
+    val dBuff = testInputStream(AdaptiveHuffmanCompressor, compressed)
+
+    assert(compressed == cBuff)
+    expect(dBuff)(buff)
   }
 
   it must "compress and decompresss data with huffman" in {
@@ -67,5 +87,11 @@ class HuffmanCompressorSuite extends FlatSpec{
     assert(compressed != buff)
     expect(decompressed)(buff)
 
+    // test streams
+    val cBuff = testOutputStream( compressor, buff )
+    val dBuff = testInputStream( compressor, compressed)
+
+    assert(compressed == cBuff)
+    expect(dBuff)(buff)
   }
 }

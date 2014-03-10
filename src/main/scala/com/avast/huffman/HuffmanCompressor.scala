@@ -27,6 +27,8 @@ import com.avast.{ByteBufferBackedOutputStream, ByteBufferBackedInputStream, Com
 import java.nio.ByteBuffer
 import nayuki.huffmancoding._
 import com.google.protobuf.ByteString
+import java.io.{InputStream, OutputStream}
+import java.util.Arrays
 
 
 // Huffman compressor with predefined byte statistic from huge sample of http urls.
@@ -53,7 +55,7 @@ object HttpUriHuffmanCompressor extends HuffmanCompressor(
 
 object AdaptiveHuffmanCompressor extends Compressor{
 
-  def decompress(compressedIn: ByteBuffer): ByteBuffer = {
+  override def decompress(compressedIn: ByteBuffer): ByteBuffer = {
     val is = new ByteBufferBackedInputStream(compressedIn);
     val os = new ByteBufferBackedOutputStream(math.max(1024, compressedIn.remaining() * 2))
 
@@ -62,7 +64,7 @@ object AdaptiveHuffmanCompressor extends Compressor{
     os.asByteBuffer()
   }
 
-  def compress(rawIn: ByteBuffer): ByteBuffer = {
+  override def compress(rawIn: ByteBuffer): ByteBuffer = {
     val is = new ByteBufferBackedInputStream(rawIn);
     val os = new ByteBufferBackedOutputStream(math.max(1024, rawIn.remaining() * 2))
 
@@ -72,6 +74,10 @@ object AdaptiveHuffmanCompressor extends Compressor{
 
     os.asByteBuffer()
   }
+
+  override def decompressionInputStream(delegate: InputStream): InputStream = AdaptiveHuffmanDecompress.decompressInputStream(delegate)
+
+  override def compressionOutputStream(delegate: OutputStream): OutputStream = AdaptiveHuffmanCompress.compressionOutputStream(delegate)
 }
 
 class HuffmanCompressor(val frequencies: Array[Int]) extends Compressor{
@@ -83,7 +89,7 @@ class HuffmanCompressor(val frequencies: Array[Int]) extends Compressor{
     canonCode.toCodeTree();  // Replace code tree with canonical one. For each symbol, the code value may change but the code length stays the same.
   }
 
-  def decompress(compressedIn: ByteBuffer): ByteBuffer = {
+  override def decompress(compressedIn: ByteBuffer): ByteBuffer = {
     val is = new ByteBufferBackedInputStream(compressedIn);
     val os = new ByteBufferBackedOutputStream(math.max(1024, compressedIn.remaining() * 2))
 
@@ -92,7 +98,7 @@ class HuffmanCompressor(val frequencies: Array[Int]) extends Compressor{
     os.asByteBuffer()
   }
 
-  def compress(rawIn: ByteBuffer): ByteBuffer = {
+  override def compress(rawIn: ByteBuffer): ByteBuffer = {
     val is = new ByteBufferBackedInputStream(rawIn);
     val os = new ByteBufferBackedOutputStream(math.max(1024, rawIn.remaining() * 2))
 
@@ -101,6 +107,14 @@ class HuffmanCompressor(val frequencies: Array[Int]) extends Compressor{
     bos.close()
 
     os.asByteBuffer()
+  }
+
+  override def decompressionInputStream(delegate: InputStream): InputStream = HuffmanDecompress.decompressionInputStream(codeTree, delegate)
+
+  override def compressionOutputStream(delegate: OutputStream): OutputStream = HuffmanCompress.compressionOutputStream(codeTree, delegate)
+
+  override def toString():String = {
+    codeTree.toString
   }
 }
 

@@ -23,13 +23,7 @@
 
 package nayuki.huffmancoding;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 
 
 // Uses static Huffman coding to compress an input file to an output file. Use HuffmanDecompress to decompress.
@@ -111,5 +105,26 @@ public final class HuffmanCompress {
 		}
 		enc.write(256);  // EOF
 	}
+
+    public static OutputStream compressionOutputStream(CodeTree code, final OutputStream delegate){
+        final BitOutputStream out = new BitOutputStream(delegate);
+        final HuffmanEncoder enc = new HuffmanEncoder(out);
+		enc.codeTree = code;
+
+        return new OutputStream(){
+            boolean closed = false;
+
+            @Override
+            public void write(int b) throws IOException {
+                enc.write(b);
+            }
+
+            @Override
+            public void close() throws IOException {
+                enc.write(256);  // EOF
+                out.close();
+            }
+        };
+    }
 	
 }

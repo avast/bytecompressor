@@ -23,13 +23,7 @@
 
 package nayuki.huffmancoding;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.Arrays;
 
 
@@ -80,6 +74,50 @@ public final class AdaptiveHuffmanDecompress {
 				freqTable = new FrequencyTable(initFreqs);
 		}
 	}
+
+    public static InputStream decompressInputStream(final InputStream delegate){
+        final BitInputStream in = new BitInputStream(delegate);
+
+        return new InputStream(){
+            int[] initFreqs = new int[257];
+            int count = 0;
+            final HuffmanDecoder dec = new HuffmanDecoder(in);
+            FrequencyTable freqTable;
+            boolean endReached = false;
+
+            {
+                Arrays.fill(initFreqs, 1);
+                freqTable = new FrequencyTable(initFreqs);
+                dec.codeTree = freqTable.buildCodeTree();
+            }
+
+            @Override
+            public int read() throws IOException {
+                if (endReached)
+                    return -1;
+
+                int symbol = dec.read();
+			    if (symbol == 256){  // EOF symbol
+                    endReached = true;
+                    return -1;
+                }
+
+                freqTable.increment(symbol);
+                count++;
+                if (count < 262144 && isPowerOf2(count) || count % 262144 == 0)  // Update code tree
+                    dec.codeTree = freqTable.buildCodeTree();
+                if (count % 262144 == 0)  // Reset frequency table
+                    freqTable = new FrequencyTable(initFreqs);
+
+                return symbol;
+            }
+
+            @Override
+            public void close() throws IOException {
+                delegate.close();
+            }
+        };
+    }
 	
 	
 	private static boolean isPowerOf2(int x) {

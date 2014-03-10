@@ -23,13 +23,7 @@
 
 package nayuki.huffmancoding;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.Arrays;
 
 
@@ -83,8 +77,41 @@ public final class AdaptiveHuffmanCompress {
 	}
 	
 	
-	private static boolean isPowerOf2(int x) {
+	public static boolean isPowerOf2(int x) {
 		return x > 0 && (x & -x) == x;
 	}
+
+    public static OutputStream compressionOutputStream(OutputStream delegate){
+        final BitOutputStream out = new BitOutputStream(delegate);
+        final HuffmanEncoder enc = new HuffmanEncoder(out);
+
+        return new OutputStream() {
+            final int[] initFreqs = new int[257];
+            FrequencyTable freqTable;
+
+            {
+                Arrays.fill(initFreqs, 1);
+                freqTable = new FrequencyTable(initFreqs);
+                enc.codeTree = freqTable.buildCodeTree();  // We don't need to make a canonical code since we don't transmit the code tree
+            }
+
+            int count = 0;
+
+            public void write(int b) throws IOException {
+                enc.write(b);
+                freqTable.increment(b);
+                count += 1;
+                if (count < 262144 && AdaptiveHuffmanCompress.isPowerOf2(count) || count % 262144 == 0)
+                    enc.codeTree = freqTable.buildCodeTree();
+                if (count % 262144 == 0)
+                    freqTable = new FrequencyTable(initFreqs);
+            }
+
+            public void close() throws IOException {
+                enc.write(256);  // EOF
+                out.close();
+            }
+        };
+    }
 	
 }
