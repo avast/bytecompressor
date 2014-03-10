@@ -19,38 +19,14 @@ package com.avast.gzip
 import java.nio.ByteBuffer
 import java.util.zip._
 import com.avast.{ByteBufferBackedInputStream, ByteBufferBackedOutputStream, Compressor}
+import java.io.{InputStream, OutputStream}
 
 /**
  *
  */
 class GzipCompressor extends Compressor{
 
-  def decompress(compressedIn: ByteBuffer): ByteBuffer = {
-    val bufferSize = math.max(1024, compressedIn.remaining() * 2 )
-    val gzipIn = new GZIPInputStream(new ByteBufferBackedInputStream(compressedIn))
-    val bufOut = new ByteBufferBackedOutputStream(bufferSize)
-    pipe(gzipIn,bufOut, bufferSize)
-    gzipIn.close()
-    bufOut.asByteBuffer()
-  }
+  override def decompressionInputStream(delegate: InputStream): InputStream = new GZIPInputStream(delegate)
 
-  def compress(rawIn: ByteBuffer): ByteBuffer = {
-    val bufferSize = math.max(1024, rawIn.remaining() * 2 )
-    val bufOut = new ByteBufferBackedOutputStream(bufferSize)
-    val gzipOs =  new GZIPOutputStream(bufOut)
-
-    if (rawIn.hasArray()){
-      gzipOs.write(rawIn.array(), rawIn.position(), rawIn.remaining())
-      rawIn.position(rawIn.limit())
-    }else{
-      val buff = new Array[Byte](rawIn.remaining())
-      rawIn.get(buff)
-      gzipOs.write(buff)
-    }
-
-    gzipOs.finish()
-    gzipOs.close()
-
-    bufOut.asByteBuffer()
-  }
+  override def compressionOutputStream(delegate: OutputStream): OutputStream = new GZIPOutputStream(delegate)
 }

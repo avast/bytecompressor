@@ -19,6 +19,7 @@ package com.avast.zlib
 import com.avast.{ByteBufferBackedOutputStream, Compressor}
 import java.nio.ByteBuffer
 import java.util.zip._
+import java.io.{InputStream, OutputStream}
 
 /**
  *
@@ -27,47 +28,15 @@ import java.util.zip._
  */
 class ZlibCompressor(level:Int = Deflater.DEFAULT_COMPRESSION, strategy:Int = Deflater.DEFAULT_STRATEGY) extends Compressor{
 
-  def decompress(compressedIn: ByteBuffer): ByteBuffer = {
+  override def decompressionInputStream(delegate: InputStream): InputStream = {
     val inflater = new Inflater()
-    val bufferSize = math.max(1024, compressedIn.remaining() * 2 )
-
-    if (compressedIn.hasArray()){
-      inflater.setInput(compressedIn.array(), compressedIn.position(), compressedIn.remaining())
-      compressedIn.position(compressedIn.limit())
-    }else{
-      val buff = new Array[Byte](compressedIn.remaining())
-      compressedIn.get(buff)
-      inflater.setInput(buff)
-    }
-
-    val out = new ByteBufferBackedOutputStream(bufferSize)
-    val iout = new InflaterOutputStream(out, inflater, bufferSize)
-    iout.finish()
-    iout.close()
-    return out.asByteBuffer()
+    new InflaterInputStream(delegate, inflater)
   }
 
-  def compress(rawIn: ByteBuffer): ByteBuffer = {
-
+  override def compressionOutputStream(delegate: OutputStream): OutputStream = {
     val deflater = new Deflater();
     deflater.setLevel(level)
     deflater.setStrategy(strategy)
-
-    val bufferSize = math.max(1024, rawIn.remaining() * 2 )
-
-    if (rawIn.hasArray()){
-      deflater.setInput(rawIn.array(), rawIn.position(), rawIn.remaining());
-      rawIn.position(rawIn.limit())
-    }else{
-      val buff = new Array[Byte](rawIn.remaining())
-      rawIn.get(buff)
-      deflater.setInput(buff)
-    }
-
-    val out = new ByteBufferBackedOutputStream(bufferSize)
-    val dout = new DeflaterOutputStream(out,deflater,bufferSize)
-    dout.finish()
-    dout.close()
-    return out.asByteBuffer()
+    new DeflaterOutputStream(delegate,deflater)
   }
 }
