@@ -34,8 +34,27 @@ abstract public class Compressor {
         Pipe.apply(in, os);
     }
 
-    public abstract ByteBuffer decompress(ByteBuffer compressedIn);
+    public ByteBuffer decompress(ByteBuffer compressedIn) throws IOException {
+        int bufferSize = Math.max(1024, compressedIn.remaining() * 2);
+        InputStream is = decompressionInputStream(new ByteBufferBackedInputStream(compressedIn));
+        ByteBufferBackedOutputStream bufOut = new ByteBufferBackedOutputStream(bufferSize);
+        pipe(is,bufOut, bufferSize);
+        is.close();
+        return bufOut.asByteBuffer();
+    }
 
-    public abstract ByteBuffer compress(ByteBuffer rawIn);
+    public ByteBuffer compress(ByteBuffer rawIn) throws IOException {
+        ByteBufferBackedOutputStream buffer = new ByteBufferBackedOutputStream(Math.max(1024, rawIn.remaining() * 2));
+        OutputStream os = compressionOutputStream(buffer);
+
+        pipe(rawIn, os);
+
+        os.close();
+        return buffer.asByteBuffer();
+    }
+
+    public abstract OutputStream compressionOutputStream(OutputStream delegate);
+
+    public abstract InputStream decompressionInputStream(InputStream delegate);
 
 }
