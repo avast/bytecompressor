@@ -27,26 +27,37 @@ import java.util.List;
 public class ByteBufferBackedOutputStream extends OutputStream {
     protected static final int MIN_CAPACITY = 1024;
     protected final int initialBuffCapacity;
+    private final boolean allocateDirect;
 
     protected ByteBuffer lastBuff;
     protected final List<ByteBuffer> buffers = new LinkedList<ByteBuffer>();
     protected int written = 0;
 
     public ByteBufferBackedOutputStream(int initialBuffCapacity){
+        this(initialBuffCapacity, false);
+    }
+    public ByteBufferBackedOutputStream(int initialBuffCapacity, boolean allocateDirect){
         this.initialBuffCapacity = initialBuffCapacity;
-        lastBuff = ByteBuffer.allocate( Math.max(MIN_CAPACITY, initialBuffCapacity) );
+        this.allocateDirect = allocateDirect;
+        lastBuff = allocateBuff(Math.max(MIN_CAPACITY, initialBuffCapacity));
     }
 
-    protected void allocateBuff(){
+    protected ByteBuffer allocateBuff(int capacity){
+        if (allocateDirect)
+            return ByteBuffer.allocateDirect(capacity);
+        return ByteBuffer.allocate(capacity);
+    }
+
+    protected void allocateNextBuff(){
         lastBuff.flip();
         buffers.add(lastBuff);
-        lastBuff = ByteBuffer.allocate( Math.max(MIN_CAPACITY, initialBuffCapacity) );
+        lastBuff = allocateBuff( Math.max(MIN_CAPACITY, initialBuffCapacity) );
     }
 
     @Override
     public synchronized void write(int b) throws IOException {
         if (lastBuff.remaining() == 0)
-            allocateBuff();
+            allocateNextBuff();
         lastBuff.put((byte)b);
         written+=1;
     }
@@ -58,7 +69,7 @@ public class ByteBufferBackedOutputStream extends OutputStream {
 
         while (lenght > 0){
             if (lastBuff.remaining() == 0)
-              allocateBuff();
+              allocateNextBuff();
 
             int toWrite = Math.min( lastBuff.remaining(), lenght);
             lastBuff.put(b, offset, toWrite);
@@ -74,10 +85,12 @@ public class ByteBufferBackedOutputStream extends OutputStream {
           return lastBuff;
         }else{
             // concat all chunks into single ByteBuffer
-            ByteBuffer result = ByteBuffer.allocate( written );
+            ByteBuffer result = allocateBuff( written );
             buffers.add(lastBuff);
             for (ByteBuffer b:buffers){
                 result.put(b);
+                if (allocateDirect && (b instanceof sun.nio.ch.DirectBuffer))
+                    ((sun.nio.ch.DirectBuffer)b).cleaner().clean();
             }
             result.flip();
             return result;
