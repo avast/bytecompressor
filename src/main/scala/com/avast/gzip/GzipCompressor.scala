@@ -16,15 +16,14 @@
 
 package com.avast.gzip
 
-import java.nio.ByteBuffer
 import java.util.zip._
-import com.avast.{ByteBufferBackedInputStream, ByteBufferBackedOutputStream, Compressor}
+import com.avast.Compressor
 import java.io.{InputStream, OutputStream}
 
 /**
  *
  */
-class GzipCompressor extends Compressor{
+object GzipCompressor extends Compressor{
 
   override def decompressionInputStream(delegate: InputStream): InputStream = new GZIPInputStream(delegate)
 

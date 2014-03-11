@@ -30,7 +30,7 @@ class GzipCompressorSuite extends FlatSpec{
 
     buff.position(0)
 
-    val compressor = new GzipCompressor
+    val compressor = GzipCompressor
     val compressed = compressor.compress(buff)
     val decompressed = compressor.decompress(compressed)
 
