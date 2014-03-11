@@ -21,7 +21,11 @@ import java.nio.ByteBuffer
 import java.util.zip._
 import java.io.{InputStream, OutputStream}
 
-object ZlibCompressor extends ZlibCompressor(level = Deflater.DEFAULT_COMPRESSION, strategy = Deflater.DEFAULT_STRATEGY)
+object ZlibCompressor extends ZlibCompressor(level = Deflater.DEFAULT_COMPRESSION, strategy = Deflater.DEFAULT_STRATEGY){
+
+  val DEFAULT_COMPRESSION = Deflater.DEFAULT_COMPRESSION
+  val DEFAULT_STRATEGY = Deflater.DEFAULT_STRATEGY
+}
 
 /**
  *
