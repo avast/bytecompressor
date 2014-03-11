@@ -21,6 +21,8 @@ import java.nio.ByteBuffer
 import java.util.zip._
 import java.io.{InputStream, OutputStream}
 
+object ZlibCompressor extends ZlibCompressor(level = Deflater.DEFAULT_COMPRESSION, strategy = Deflater.DEFAULT_STRATEGY)
+
 /**
  *
  * @param level compression level (0-9)
