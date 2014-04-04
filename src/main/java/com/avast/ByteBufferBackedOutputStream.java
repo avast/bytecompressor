@@ -97,6 +97,8 @@ public class ByteBufferBackedOutputStream extends OutputStream {
         }
     }
 
+    public int writtenBytes(){ return written; }
+
     public ByteString asByteString(){
         return ByteString.copyFrom(asByteBuffer());
     }
