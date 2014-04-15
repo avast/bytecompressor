@@ -7,7 +7,7 @@
   <description>Avast fork of https://github.com/nayuki/Huffman-Coding , it adds bytecompressor layer compatibility.</description>
   
   <groupId>com.avast</groupId>
-  <artifactId>bytecompressor-huffman</artifactId>
+  <artifactId>bytecompressor-huffman_${scalaVersion}</artifactId>
   <version>1.2-SNAPSHOT</version>
 
     <parent>
