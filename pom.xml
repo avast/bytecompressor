@@ -7,7 +7,7 @@
   <description>Java impmenentation of compression algorithm Snappy from Google. This is a Avast a.s. fork of http://code.google.com/p/jsnappy/ , it adds bytecompressor layer compatibility.</description>
   
   <groupId>com.avast</groupId>
-  <artifactId>bytecompressor-jsnappy</artifactId>
+  <artifactId>bytecompressor-jsnappy_${scalaVersion}</artifactId>
   <version>1.2-SNAPSHOT</version>
 
     <parent>
