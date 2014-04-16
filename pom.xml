@@ -71,6 +71,9 @@
 
         <profile>
             <id>scala_2.9.3</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
             <properties>
                 <scalaVersion>2.9.3</scalaVersion>
             </properties>
@@ -154,7 +157,7 @@
           </execution>
         </executions>
       </plugin>
-      
+
       <plugin>
         <groupId>net.alchim31.maven</groupId>
         <artifactId>scala-maven-plugin</artifactId>
@@ -235,26 +238,73 @@
         </executions>
       </plugin>
                   
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <configuration>
-                    <includes>
-                        <include>**/*.java</include>
-                        <include>**/*.scala</include>
-                    </includes>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>jar-no-fork</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>    
-            
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-source-plugin</artifactId>
+            <version>2.2.1</version>
+
+            <configuration>
+                <includes>
+                    <include>**/*.java</include>
+                    <include>**/*.scala</include>
+                </includes>
+            </configuration>
+
+            <executions>
+                <execution>
+                    <id>attach-sources</id>
+                    <phase>verify</phase>
+                    <goals>
+                        <goal>jar-no-fork</goal>
+                    </goals>
+                </execution>
+                <execution>
+                    <id>attach-test-sources</id>
+                    <phase>verify</phase>
+                    <goals>
+                        <goal>test-jar-no-fork</goal>
+                    </goals>
+                </execution>
+            </executions>
+        </plugin>
+
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-release-plugin</artifactId>
+            <version>2.5</version>
+            <configuration>
+                <preparationGoals>verify</preparationGoals>
+                <checkModificationExcludes>
+                    <checkModificationExclude>pom.xml</checkModificationExclude>
+                    <checkModificationExclude>*/pom.xml</checkModificationExclude>
+                </checkModificationExcludes>
+                <autoVersionSubmodules>true</autoVersionSubmodules>
+                <useReleaseProfile>false</useReleaseProfile>
+                <arguments>-Psonatype-oss-release</arguments>
+                <mavenExecutorId>forked-path</mavenExecutorId>
+            </configuration>
+        </plugin>
+
+        <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>build-helper-maven-plugin</artifactId>
+            <executions>
+                <execution>
+                    <id>attach-sources</id>
+                    <phase>generate-sources</phase>
+                    <goals>
+                        <goal>add-source</goal>
+                    </goals>
+                    <configuration>
+                        <sources>
+                            <source>src/main/java</source>
+                            <source>src/main/scala</source>
+                        </sources>
+                    </configuration>
+                </execution>
+            </executions>
+        </plugin>
+
     </plugins>
 
   </build>
