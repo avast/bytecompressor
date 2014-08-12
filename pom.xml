@@ -7,7 +7,7 @@
   <description>Bytecompressor abstraction for Zlib compression algorithm from standard Java package java.util.zip.</description>
   
   <groupId>com.avast</groupId>
-  <artifactId>bytecompressor-zlib_${scalaVersion}</artifactId>
+  <artifactId>bytecompressor-zlib_${build.scala.version}</artifactId>
   <version>1.2-SNAPSHOT</version>
 
     <parent>
@@ -48,39 +48,20 @@
     <properties>
         <timestamp>${maven.build.timestamp}</timestamp>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <scalaVersion>2.9.2</scalaVersion>
     </properties>
 
 
     <profiles>
-
         <profile>
-            <id>scala_2.9.2</id>
+            <id>scala-2.9</id>
             <properties>
-                <scalaVersion>2.9.2</scalaVersion>
+                <build.scala.version>2.9</build.scala.version>
+                <build.scala.compiler.version>2.9.3</build.scala.compiler.version>
             </properties>
             <dependencies>
                 <dependency>
                     <groupId>org.scalatest</groupId>
-                    <artifactId>scalatest_${scalaVersion}</artifactId>
-                    <version>2.0.M5</version>
-                    <scope>test</scope>
-                </dependency>
-            </dependencies>
-        </profile>
-
-        <profile>
-            <id>scala_2.9.3</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <properties>
-                <scalaVersion>2.9.3</scalaVersion>
-            </properties>
-            <dependencies>
-                <dependency>
-                    <groupId>org.scalatest</groupId>
-                    <artifactId>scalatest_${scalaVersion}</artifactId>
+                    <artifactId>scalatest_${build.scala.compiler.version}</artifactId>
                     <version>2.0.M5b</version>
                     <scope>test</scope>
                 </dependency>
@@ -88,15 +69,16 @@
         </profile>
 
         <profile>
-            <id>scala_2.10.0</id>
+            <id>scala-2.10</id>
             <properties>
-                <scalaVersion>2.10.0</scalaVersion>
+                <build.scala.version>2.10</build.scala.version>
+                <build.scala.compiler.version>2.10.4</build.scala.compiler.version>
             </properties>
             <dependencies>
                 <dependency>
                     <groupId>org.scalatest</groupId>
-                    <artifactId>scalatest_${scalaVersion}</artifactId>
-                    <version>2.0.M5</version>
+                    <artifactId>scalatest_${build.scala.version}</artifactId>
+                    <version>2.2.1</version>
                     <scope>test</scope>
                 </dependency>
             </dependencies>
@@ -164,7 +146,7 @@
           <version>3.1.3</version>
 
           <configuration>
-              <scalaVersion>${scalaVersion}</scalaVersion>
+              <scalaVersion>${build.scala.compiler.version}</scalaVersion>
           </configuration>
 
           <executions>
@@ -326,20 +308,13 @@
     <dependency>
       <groupId>org.scala-lang</groupId>
       <artifactId>scala-library</artifactId>
-      <version>${scalaVersion}</version>
+      <version>${build.scala.compiler.version}</version>
     </dependency>
     
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>4.8.2</version>
-      <scope>test</scope>
-    </dependency>    
-
-    <dependency>
-      <groupId>org.scalatest</groupId>
-      <artifactId>scalatest_${scalaVersion}</artifactId>
-      <version>2.0.M5</version>
       <scope>test</scope>
     </dependency>
         
