@@ -13,7 +13,7 @@
     <parent>
         <groupId>org.sonatype.oss</groupId>
         <artifactId>oss-parent</artifactId>
-        <version>7</version>
+        <version>9</version>
     </parent>
     <url>https://github.com/avast-open/bytecompressor-zlib</url>
     <licenses>
@@ -296,7 +296,7 @@
       <dependency>
           <groupId>com.avast</groupId>
           <artifactId>bytecompressor</artifactId>
-          <version>1.2.0</version>
+          <version>${version}</version>
       </dependency>
 
     <dependency>
