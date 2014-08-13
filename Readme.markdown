@@ -2,14 +2,14 @@
 ByteCompressor
 ==============
 
-	Scala abstractions for some compression algorithms.
+Scala abstractions for some compression algorithms.
 
-	Beside abstraction layer, this project provide some useful utils for data processing, 
-	like Pipe, ByteBufferBackedInputStream and ByteBufferBackedOutputStream.
+Beside abstraction layer, this project provide some useful utils for data processing, 
+like Pipe, ByteBufferBackedInputStream and ByteBufferBackedOutputStream.
 
-	
-	License
-	-------
+
+License
+-------
 
 	Copyright 2013 Lukas Karas, Avast a.s. <karas@avast.com>
 
@@ -29,22 +29,22 @@ ByteCompressor
 ByteCompressor: Huffman Coding
 ==============================
 
-	Avast fork of https://github.com/nayuki/Huffman-Coding , it ads bytecompressor layer compatibility.
+Avast fork of https://github.com/nayuki/Huffman-Coding , it ads bytecompressor layer compatibility.
 
-	This project is an open-source reference implementation of Huffman coding in Java.
-	The code is intended to be used for study, and as a solid basis for modification
-	and extension. As such, it is optimized for clear logic and low complexity,
-	not speed/memory/performance.
-
-
-	Description
-	-----------
-
-	An overview of the code is given here: [http://nayuki.eigenstate.org/page/huffman-coding-java](http://nayuki.eigenstate.org/page/huffman-coding-java)
+This project is an open-source reference implementation of Huffman coding in Java.
+The code is intended to be used for study, and as a solid basis for modification
+and extension. As such, it is optimized for clear logic and low complexity,
+not speed/memory/performance.
 
 
-	License
-	-------
+Description
+-----------
+
+An overview of the code is given here: [http://nayuki.eigenstate.org/page/huffman-coding-java](http://nayuki.eigenstate.org/page/huffman-coding-java)
+
+
+License
+-------
 
 	(MIT License)
 
@@ -71,13 +71,13 @@ ByteCompressor: Huffman Coding
 ByteCompressor: jSnappy
 =======================
 
-	Java impmenentation of compression algorithm Snappy from Google. 
-	This is a Avast a.s. fork of http://code.google.com/p/jsnappy/ , 
-	it adds bytecompressor layer compatibility.
+Java impmenentation of compression algorithm Snappy from Google. 
+This is a Avast a.s. fork of http://code.google.com/p/jsnappy/ , 
+it adds bytecompressor layer compatibility.
 
-	
-	License
-	-------
+
+License
+-------
 
 	(Apache 2.0 License)
 
@@ -98,7 +98,7 @@ ByteCompressor: jSnappy
 ByteCompressor: ZLIB
 =======================
 
-	Bytecompressor abstraction for Zlib and Gzip compression algorithm from standard Java package java.util.zip.
+Bytecompressor abstraction for Zlib and Gzip compression algorithm from standard Java package java.util.zip.
 
-	Both the zlib and gzip formats use the same compressed data format internally, but have different headers
-	and trailers around the compressed data.
+Both the zlib and gzip formats use the same compressed data format internally, but have different headers
+and trailers around the compressed data.
