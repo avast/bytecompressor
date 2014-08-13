@@ -1,6 +1,6 @@
+bytecompressor-jsnappy/tmp/*
 
+tmp/*
 target
 .idea
 *.iml
-
-bytecompressor-jsnappy/tmp/*
