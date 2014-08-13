@@ -1,0 +1,32 @@
+
+## Setup repository 
+## https://docs.sonatype.org/display/Repository/Sonatype+OSS+Maven+Repository+Usage+Guide
+
+
+## release 1.2.1
+
+export releaseVersion=1.2.1
+export gpgPass=*****
+export scalaVersion=2.9
+export gpgKeyname=A03063C5
+
+mvn clean -P scala-${scalaVersion}
+mvn release:clean -P scala-${scalaVersion}
+
+mvn release:prepare \
+   -P release,scala-${scalaVersion} \
+   -DrepositoryId=sonatype-nexus-staging \
+   -DupdateWorkingCopyVersions=false \
+   -Dtag=bytecompressor_${scalaVersion}-${releaseVersion} \
+   -DreleaseVersion=${releaseVersion}
+   
+mvn release:perform \
+   -P release,scala-${scalaVersion} \
+   -DrepositoryId=sonatype-nexus-staging \
+   -DupdateWorkingCopyVersions=false \
+   -Dtag=bytecompressor_${scalaVersion}-${releaseVersion} \
+   -DreleaseVersion=${releaseVersion}
+   
+# We have to sign resolved poms and push it sonatype artifactory
+   
+./signAndDeployResolvedPoms.sh
