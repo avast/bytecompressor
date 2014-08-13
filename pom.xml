@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <name>bytecompressor-parent</name>
+
+    <groupId>com.avast</groupId>
+    <artifactId>bytecompressor-parent</artifactId>
+    <version>1.2.1</version>
+    <packaging>pom</packaging>
+
+    <parent>
+        <groupId>com.avast</groupId>
+        <artifactId>avast-oss-parent</artifactId>
+        <version>1.0.4</version>
+    </parent>
+    <url>https://github.com/avast-open/bytecompressor</url>
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>http://opensource.org/licenses/Apache-2.0</url>
+        </license>
+    </licenses>
+
+    <organization>
+        <name>AVAST Software</name>
+        <url>http://www.avast.com</url>
+    </organization>
+
+    <developers>
+        <developer>
+            <id>karas</id>
+            <name>Lukas Karas</name>
+            <email>karas@avast.com</email>
+            <organization>AVAST Software</organization>
+            <organizationUrl>http://www.avast.com</organizationUrl>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:git@github.com:avast-open/bytecompressor.git</connection>
+        <developerConnection>scm:git:git@github.com:avast-open/bytecompressor.git</developerConnection>
+        <url>git@github.com:avast-open/bytecompressor.git</url>
+        <tag>bytecompressor_2.9-1.2.1</tag>
+    </scm>
+
+
+    <properties>
+        <timestamp>${maven.build.timestamp}</timestamp>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <gpg.keyname>A03063C5</gpg.keyname>
+        <gpg.defaultKeyring>false</gpg.defaultKeyring>
+    </properties>
+
+    <modules>
+        <module>bytecompressor</module>
+        <module>bytecompressor-huffman</module>
+        <module>bytecompressor-jsnappy</module>
+        <module>bytecompressor-zlib</module>
+    </modules>
+
+</project>
