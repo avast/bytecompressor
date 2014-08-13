@@ -9,12 +9,12 @@
 
     <groupId>com.avast</groupId>
     <artifactId>bytecompressor-zlib_2.9</artifactId>
-    <version>1.2.1</version>
+    <version>1.2-SNAPSHOT</version>
 
     <parent>
         <groupId>com.avast</groupId>
         <artifactId>bytecompressor-parent</artifactId>
-        <version>1.2.1</version>
+        <version>1.2-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
