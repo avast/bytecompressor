@@ -13,7 +13,7 @@
     <parent>
         <groupId>com.avast</groupId>
         <artifactId>avast-oss-parent</artifactId>
-        <version>1.0.4</version>
+        <version>1.0.5</version>
     </parent>
     <url>https://github.com/avast-open/bytecompressor</url>
     <licenses>
@@ -62,97 +62,6 @@
 
     <build>
         <plugins>
-            <!-- TODO: remove this plugin configuration after upgrade to new parent pom -->
-            <plugin>
-                <groupId>net.alchim31.maven</groupId>
-                <artifactId>scala-maven-plugin</artifactId>
-                <configuration>
-                    <scalaVersion>${build.scala.compiler.version}</scalaVersion>
-                </configuration>
-                <version>3.1.6</version>
-                <executions>
-                    <!-- Compilation in process-resources phase is necessary for mixed Java/Scala projects - Scala must be compiled before Java classes. -->
-                    <execution>
-                        <id>compile-first</id>
-                        <phase>process-resources</phase>
-                        <goals>
-                            <goal>compile</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>test-compile-first</id>
-                        <phase>process-test-resources</phase>
-                        <goals>
-                            <goal>testCompile</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>compile</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>compile</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>scaladoc</id>
-                        <phase>site</phase>
-                        <goals>
-                            <goal>doc-jar</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>scala-source</id>
-                        <phase>process-sources</phase>
-                        <goals>
-                            <goal>add-source</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>scala-test-sources</id>
-                        <phase>process-test-resources</phase>
-                        <goals>
-                            <goal>add-source</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>test-compile</id>
-                        <phase>test-compile</phase>
-                        <goals>
-                            <goal>testCompile</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <version>2.2.1</version>
-
-                <configuration>
-                    <includes>
-                        <include>**/*.java</include>
-                        <include>**/*.scala</include>
-                    </includes>
-                </configuration>
-
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>jar-no-fork</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>attach-test-sources</id>
-                        <phase>verify</phase>
-                        <goals>
-                            <goal>test-jar-no-fork</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
 
         </plugins>
     </build>
