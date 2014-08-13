@@ -6,6 +6,7 @@
 ## release 1.2.1
 
 export releaseVersion=1.2.1
+export releaseAttempt=1
 export gpgPass=*****
 export scalaVersion=2.9
 export gpgKeyname=A03063C5
@@ -17,14 +18,14 @@ mvn release:prepare \
    -P release,scala-${scalaVersion} \
    -DrepositoryId=sonatype-nexus-staging \
    -DupdateWorkingCopyVersions=false \
-   -Dtag=bytecompressor_${scalaVersion}-${releaseVersion} \
+   -Dtag=bytecompressor_${scalaVersion}-${releaseVersion}-${releaseAttempt} \
    -DreleaseVersion=${releaseVersion}
    
 mvn release:perform \
    -P release,scala-${scalaVersion} \
    -DrepositoryId=sonatype-nexus-staging \
    -DupdateWorkingCopyVersions=false \
-   -Dtag=bytecompressor_${scalaVersion}-${releaseVersion} \
+   -Dtag=bytecompressor_${scalaVersion}-${releaseVersion}-${releaseAttempt} \
    -DreleaseVersion=${releaseVersion}
    
 # We have to sign resolved poms and push it sonatype artifactory
