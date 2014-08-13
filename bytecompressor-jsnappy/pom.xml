@@ -9,7 +9,7 @@
     </description>
 
     <groupId>com.avast</groupId>
-    <artifactId>bytecompressor-jsnappy_2.9</artifactId>
+    <artifactId>bytecompressor-jsnappy_${build.scala.version}</artifactId>
     <version>1.2-SNAPSHOT</version>
 
     <parent>

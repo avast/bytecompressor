@@ -7,7 +7,7 @@
   <description>Java abstractions for some compression algorithms.</description>
   
   <groupId>com.avast</groupId>
-  <artifactId>bytecompressor_2.9</artifactId>
+  <artifactId>bytecompressor_${build.scala.version}</artifactId>
 
     <parent>
         <groupId>com.avast</groupId>
