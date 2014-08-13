@@ -22,7 +22,7 @@ for module in `ls -d1 bytecompressor bytecompressor-huffman bytecompressor-jsnap
 		-DrepositoryId=sonatype-nexus-staging \
 		-Dgpg.keyname=${gpgKeyname} \
 		-DpomFile=$module/target/pom-property-fix/pom.xml \
-		-Dfile=$module/${module}_${scalaVersion}-${releaseVersion}.jar \
+		-Dfile=$module/target/${module}_${scalaVersion}-${releaseVersion}.jar \
 		-Dgpg.passphrase=${gpgPass}   
 
 done
