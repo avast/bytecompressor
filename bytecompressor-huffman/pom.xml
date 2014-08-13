@@ -8,13 +8,13 @@
     </description>
 
     <groupId>com.avast</groupId>
-    <artifactId>bytecompressor-huffman_${build.scala.version}</artifactId>
-    <version>1.2-SNAPSHOT</version>
+    <artifactId>bytecompressor-huffman_2.9</artifactId>
+    <version>1.2.1</version>
 
     <parent>
         <groupId>com.avast</groupId>
         <artifactId>bytecompressor-parent</artifactId>
-        <version>1.2-SNAPSHOT</version>
+        <version>1.2.1</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
