@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  
+  <modelVersion>4.0.0</modelVersion>
+
+  <name>bytecompressor-jsnappy</name>
+  <description>Java impmenentation of compression algorithm Snappy from Google. This is a Avast a.s. fork of http://code.google.com/p/jsnappy/ , it adds bytecompressor layer compatibility.</description>
+  
+  <groupId>com.avast</groupId>
+  <artifactId>bytecompressor-jsnappy_${build.scala.version}</artifactId>
+  <version>1.2-SNAPSHOT</version>
+
+    <parent>
+        <groupId>org.sonatype.oss</groupId>
+        <artifactId>oss-parent</artifactId>
+        <version>7</version>
+    </parent>
+    <url>https://github.com/avast-open/bytecompressor-jsnappy</url>
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>http://opensource.org/licenses/Apache-2.0</url>
+        </license>
+    </licenses>
+
+    <organization>
+        <name>AVAST Software</name>
+        <url>http://www.avast.com</url>
+    </organization>
+
+    <developers>
+        <developer>
+            <id>karas</id>
+            <name>Lukas Karas</name>
+            <email>karas@avast.com</email>
+            <organization>AVAST Software</organization>
+            <organizationUrl>http://www.avast.com</organizationUrl>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:git@github.com:avast-open/bytecompressor-jsnappy.git</connection>
+        <developerConnection>scm:git:git@github.com:avast-open/bytecompressor-jsnappy.git</developerConnection>
+        <url>git@github.com:avast-open/bytecompressor-jsnappy.git</url>
+    </scm>
+  
+
+    <properties>
+        <timestamp>${maven.build.timestamp}</timestamp>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+
+    <profiles>
+
+        <profile>
+            <id>scala-2.9</id>
+            <properties>
+                <build.scala.version>2.9</build.scala.version>
+                <build.scala.compiler.version>2.9.3</build.scala.compiler.version>
+            </properties>
+            <dependencies>
+                <dependency>
+                    <groupId>org.scalatest</groupId>
+                    <artifactId>scalatest_${build.scala.compiler.version}</artifactId>
+                    <version>2.0.M5b</version>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
+        </profile>
+
+        <profile>
+            <id>scala-2.10</id>
+            <properties>
+                <build.scala.version>2.10</build.scala.version>
+                <build.scala.compiler.version>2.10.4</build.scala.compiler.version>
+            </properties>
+            <dependencies>
+                <dependency>
+                    <groupId>org.scalatest</groupId>
+                    <artifactId>scalatest_${build.scala.version}</artifactId>
+                    <version>2.2.1</version>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
+        </profile>
+
+    </profiles>
+	
+ <distributionManagement>
+    <repository>
+      <id>sonatype-nexus-staging</id>
+      <name>Nexus Staging Repository</name>
+      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+    </repository>
+  </distributionManagement>
+
+	
+
+  <build>
+    <plugins>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>2.0.2</version>
+        <configuration>
+          <source>1.6</source>
+          <target>1.6</target>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>2.3</version>
+        <configuration>
+          <archive>
+            <manifest>
+              <useUniqueVersions>false</useUniqueVersions>
+              <addClasspath>true</addClasspath>
+              <mainClass>com.avast.strup.client.netty.TestMain</mainClass>
+              <classpathPrefix>lib/</classpathPrefix>
+            </manifest>
+          </archive>
+        </configuration>
+      </plugin>
+
+      <plugin>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>copy-dependencies</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.build.directory}/lib</outputDirectory>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      
+      <plugin>
+        <groupId>net.alchim31.maven</groupId>
+        <artifactId>scala-maven-plugin</artifactId>
+          <version>3.1.3</version>
+
+          <configuration>
+              <scalaVersion>${build.scala.compiler.version}</scalaVersion>
+          </configuration>
+
+          <executions>
+
+              <execution>
+                  <id>compile</id>
+                  <goals>
+                      <goal>compile</goal>
+                  </goals>
+                  <phase>compile</phase>
+              </execution>
+
+              <execution>
+                  <id>test-compile</id>
+                  <goals>
+                      <goal>testCompile</goal>
+                  </goals>
+                  <phase>test-compile</phase>
+              </execution>
+
+              <execution>
+                  <id>compile-2</id>
+                  <phase>process-resources</phase>
+                  <goals>
+                      <goal>compile</goal>
+                  </goals>
+              </execution>
+
+              <execution>
+                  <id>test-compile-2</id>
+                  <phase>process-test-resources</phase>
+                  <goals>
+                      <goal>testCompile</goal>
+                  </goals>
+              </execution>
+
+              <execution>
+                  <id>compile-generated</id>
+                  <phase>generate-test-sources</phase>
+                  <goals>
+                      <goal>compile</goal>
+                  </goals>
+              </execution>
+
+              <execution>
+                  <id>compile-3</id>
+                  <phase>process-classes</phase>
+                  <goals>
+                      <goal>compile</goal>
+                  </goals>
+              </execution>
+
+          </executions>
+      </plugin>
+      
+      <plugin>
+        <groupId>org.scalatest</groupId>
+        <artifactId>scalatest-maven-plugin</artifactId>
+        <configuration>
+          <reportsDirectory>${project.build.directory}/surefire-reports</reportsDirectory>
+          <junitxml>.</junitxml>
+          <filereports>TestReport.txt</filereports>
+        </configuration>
+        <executions>
+          <execution>
+            <id>test</id>
+            <goals>
+              <goal>test</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+                  
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <configuration>
+                    <includes>
+                        <include>**/*.java</include>
+                        <include>**/*.scala</include>
+                    </includes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-release-plugin</artifactId>
+            <version>2.5</version>
+            <configuration>
+                <preparationGoals>verify</preparationGoals>
+                <checkModificationExcludes>
+                    <checkModificationExclude>pom.xml</checkModificationExclude>
+                    <checkModificationExclude>*/pom.xml</checkModificationExclude>
+                </checkModificationExcludes>
+                <autoVersionSubmodules>true</autoVersionSubmodules>
+                <useReleaseProfile>false</useReleaseProfile>
+                <arguments>-Psonatype-oss-release</arguments>
+                <mavenExecutorId>forked-path</mavenExecutorId>
+            </configuration>
+        </plugin>
+
+        <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>build-helper-maven-plugin</artifactId>
+            <executions>
+                <execution>
+                    <id>attach-sources</id>
+                    <phase>generate-sources</phase>
+                    <goals>
+                        <goal>add-source</goal>
+                    </goals>
+                    <configuration>
+                        <sources>
+                            <source>src/main/java</source>
+                            <source>src/main/scala</source>
+                        </sources>
+                    </configuration>
+                </execution>
+            </executions>
+        </plugin>
+
+    </plugins>
+
+  </build>
+
+  <dependencies>
+
+      <dependency>
+          <groupId>com.avast</groupId>
+          <artifactId>bytecompressor</artifactId>
+          <version>1.2.0</version>
+      </dependency>
+
+    <dependency>
+      <groupId>com.google.protobuf</groupId>
+      <artifactId>protobuf-java</artifactId>
+      <version>2.4.1</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.scala-lang</groupId>
+      <artifactId>scala-library</artifactId>
+      <version>${build.scala.compiler.version}</version>
+    </dependency>
+    
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.8.2</version>
+      <scope>test</scope>
+    </dependency>
+        
+  </dependencies>     
+  
+</project>
